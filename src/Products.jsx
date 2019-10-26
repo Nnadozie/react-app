@@ -4,6 +4,7 @@ import ProductTable from './ProductTable.jsx';
 import ProductForm from './ProductForm';
 
 var PRODUCTS = {
+  '0': {id: 0, category: '', price: '', stocked: false, name: ''},
   '1': {id: 1, category: 'Musical Instruments', price: '$459.99', stocked: true, name: 'Clarinet'},
   '2': {id: 2, category: 'Musical Instruments', price: '$5,000', stocked: true, name: 'Harpsicord'},
   '3': {id: 3, category: 'Musical Instruments', price: '$11,000', stocked: false, name: 'Fortepiano'},
@@ -18,12 +19,14 @@ class Products extends React.Component {
     this.state = {
       filterText: '',
       inStockOnly: false,
-      products: PRODUCTS
+      products: PRODUCTS,
+      formProduct: '0'
     };
 
     this.handleFilter = this.handleFilter.bind(this);
     this.handleDestroy = this.handleDestroy.bind(this);
     this.saveProduct = this.saveProduct.bind(this);
+    this.edit = this.edit.bind(this);
   }
   handleFilter(filterInput) {
     this.setState(filterInput);
@@ -32,11 +35,12 @@ class Products extends React.Component {
     if (!product.id) {
       product.id = new Date().getTime();
     }
-    this.setState((prevState) => {
-      let products = prevState.products;
-      products[product.id] = product;
-      return { products };
-    });
+    this.setState((prevState) => ({
+      products: {
+          ...this.state.products,
+      },
+      formProduct: 0
+    }));
   }
   handleDestroy(productId) {
     this.setState((prevState) => {
@@ -44,6 +48,13 @@ class Products extends React.Component {
       delete products[productId];
       return { products };
     });
+  }
+
+  edit(productId) {
+    this.setState({
+        formProduct: productId
+    })
+    console.log(this.state.formProduct);
   }
   render() {
     return (
@@ -58,8 +69,11 @@ class Products extends React.Component {
           filterText={this.state.filterText}
           inStockOnly={this.state.inStockOnly}
           onDestroy={this.handleDestroy}
+          edit={this.edit}
         ></ProductTable>
-        <ProductForm onSave={this.saveProduct} ></ProductForm>
+        <ProductForm onSave={this.saveProduct}
+            product={this.state.products[this.state.formProduct]}
+        ></ProductForm>
       </div>
     );
   }

@@ -8,6 +8,7 @@ class ProductTable extends React.Component {
     this.sortByKeyAndOrder = this.sortByKeyAndOrder.bind(this);
     this.handleSort = this.handleSort.bind(this);
     this.handleDestroy = this.handleDestroy.bind(this);
+    this.edit = this.edit.bind(this);
     this.state = {
       sort: {
         column: 'name',
@@ -44,13 +45,17 @@ class ProductTable extends React.Component {
       }
     });
   }
+
+  edit(id) {
+    this.props.edit(id);
+  }
   render() {
     var rows = [];
     this.sortProducts().forEach((product) => {
       if (product.name.indexOf(this.props.filterText) === -1 || (!product.stocked && this.props.inStockOnly)) {
         return;
       }
-      rows.push(<ProductRow product={product} key={product.id} onDestroy={this.handleDestroy}></ProductRow>);
+      rows.push(<ProductRow product={product} key={product.id} onDestroy={this.handleDestroy} edit={this.edit}></ProductRow>);
     });
 
     return (

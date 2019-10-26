@@ -46,6 +46,15 @@ class ProductForm extends React.Component {
     });
     e.preventDefault();
   }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.product.id !== prevProps.product.id) {
+      this.setState({
+        product: this.props.product
+      });
+    }
+  }
   render() {
     return (
       <form>
